@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <style>
+    :root {
+      --primary-color: #4285f4;
+      --hover-color: #3367d6;
+      --border-color: #ddd;
+      --background-color: #f5f5f5;
+      --card-color: #fff;
+      --text-color: #333;
+      --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      --danger-color: #dc3545;
+      --danger-hover: #bd2130;
+      --warning-color: #ffc107;
+      --warning-hover: #e0a800;
+      --success-color: #28a745;
+      --success-hover: #218838;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    h2 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    
+    .menu {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .menu-btn {
+      padding: 12px 20px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .menu-btn:hover {
+      background-color: var(--hover-color);
+    }
+    
+    .menu-btn.warning {
+      background-color: var(--warning-color);
+      color: #000;
+    }
+    
+    .menu-btn.warning:hover {
+      background-color: var(--warning-hover);
+    }
+    
+    .section {
+      background-color: var(--card-color);
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      display: none;
+    }
+    
+    .section.active {
+      display: block;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    
+    button[type="submit"], .btn {
+      padding: 12px 20px;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--hover-color);
+    }
+    
+    .btn-danger {
+      background-color: var(--danger-color);
+    }
+    
+    .btn-danger:hover {
+      background-color: var(--danger-hover);
+    }
+    
+    .btn-warning {
+      background-color: var(--warning-color);
+      color: #000;
+    }
+    
+    .btn-warning:hover {
+      background-color: var(--warning-hover);
+    }
+    
+    .btn-success {
+      background-color: var(--success-color);
+    }
+    
+    .btn-success:hover {
+      background-color: var(--success-hover);
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    tr:hover {
+      background-color: rgba(66, 133, 244, 0.1);
+    }
+    
+    .low-stock {
+      background-color: rgba(255, 193, 7, 0.2);
+    }
+    
+    .critical-stock {
+      background-color: rgba(220, 53, 69, 0.2);
+    }
+    
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      display: none;
+    }
+    
+    .alert.success {
+      background-color: #dff0d8;
+      color: #3c763d;
+    }
+    
+    .alert.error {
+      background-color: #f2dede;
+      color: #a94442;
+    }
+    
+    .alert.warning {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    
+    .movement-form {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+    
+    .movement-form .form-group {
+      flex: 1;
+      min-width: 200px;
+      margin-bottom: 0;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 3px 7px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .badge-warning {
+      background-color: var(--warning-color);
+      color: #000;
+    }
+    
+    .badge-danger {
+      background-color: var(--danger-color);
+      color: white;
+    }
+    
+    @media (max-width: 768px) {
+      .menu {
+        flex-direction: column;
+      }
+      
+      .menu-btn {
+        width: 100%;
+      }
+      
+      .movement-form {
+        flex-direction: column;
+      }
+      
+      .movement-form .form-group {
+        width: 100%;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .action-buttons button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h2>Bienvenido al panel de inventario</h2>
+      <div id="alertas"></div>
+    </header>
+
+    <!-- Menú -->
+    <div class="menu">
+      <button class="menu-btn" onclick="mostrarSeccion('registrarProducto')">Registrar Producto</button>
+      <button class="menu-btn" onclick="mostrarSeccion('registrarMovimiento')">Registrar Movimiento</button>
+      <button class="menu-btn" onclick="mostrarSeccion('verInventario')">Ver Inventario</button>
+      <button class="menu-btn warning" onclick="mostrarSeccion('bajoStock')">
+        Bajo Stock <span id="bajoStockCounter" class="badge"></span>
+      </button>
+    </div>
+
+    <!-- Sección Registrar Producto -->
+    <section id="registrarProducto" class="section active">
+      <h3>Agregar producto</h3>
+      <form id="formAgregarProducto" onsubmit="event.preventDefault(); agregarProducto();">
+        <div class="form-group">
+          <label for="nombre">Nombre del producto</label>
+          <input id="nombre" name="nombre" placeholder="Ej: Leche Leyde" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="fecha">Fecha de vencimiento</label>
+          <input id="fecha" name="fecha" type="date" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="cantidad">Cantidad</label>
+          <input id="cantidad" name="cantidad" type="number" min="1" required>
+        </div>
+        
+        <div class="action-buttons">
+          <button type="submit" class="btn btn-primary">Agregar Producto</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Sección Registrar Movimiento -->
+    <section id="registrarMovimiento" class="section">
+      <h3>Registrar movimiento</h3>
+      <form class="movement-form" onsubmit="event.preventDefault(); registrarMovimiento();">
+        <div class="form-group">
+          <label for="producto_id">Producto</label>
+          <select id="producto_id" required></select>
+        </div>
+        
+        <div class="form-group">
+          <label for="tipo">Tipo de movimiento</label>
+          <select id="tipo" required>
+            <option value="entrada">Entrada</option>
+            <option value="salida">Salida</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="cantidad_mov">Cantidad</label>
+          <input id="cantidad_mov" type="number" min="1" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Registrar Movimiento</button>
+      </form>
+    </section>
+
+    <!-- Sección Ver Inventario -->
+    <section id="verInventario" class="section">
+      <h3>Inventario</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Fecha de Vencimiento</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="lista_productos">
+          <!-- Productos del inventario irán aquí -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Sección Bajo Stock -->
+    <section id="bajoStock" class="section">
+      <h3>Productos con Bajo Stock</h3>
+      <p>Los siguientes productos tienen menos de 5 unidades en inventario:</p>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad Actual</th>
+            <th>Fecha de Vencimiento</th>
+            <th>Recomendación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="lista_bajo_stock">
+          <!-- Productos con bajo stock irán aquí -->
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <script>
+    // Array para almacenar los productos
+    let productos = [];
+    const STOCK_MINIMO = 5;
+
+    // Función para mostrar la sección seleccionada y ocultar las otras
+    function mostrarSeccion(seccionId) {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(seccionId).classList.add('active');
+      
+      // Si es la sección de inventario o bajo stock, cargar los datos
+      if (seccionId === 'verInventario' || seccionId === 'bajoStock') {
+        cargarInventario();
+        actualizarContadorBajoStock();
+      }
+    }
+
+    // Mostrar alerta
+    function mostrarAlerta(mensaje, tipo) {
+      const alertas = document.getElementById('alertas');
+      alertas.innerHTML = ''; // Limpiar alertas anteriores
+      const alerta = document.createElement('div');
+      alerta.className = `alert ${tipo}`;
+      alerta.textContent = mensaje;
+      alertas.appendChild(alerta);
+      
+      setTimeout(() => {
+        alerta.style.display = 'none';
+      }, 5000);
+    }
+
+    // Verificar si un producto ya existe
+    function productoExiste(nombreProducto) {
+      return productos.some(
+        producto => producto.nombre.toLowerCase() === nombreProducto.toLowerCase()
+      );
+    }
+
+    // Obtener productos con bajo stock
+    function obtenerBajoStock() {
+      return productos.filter(producto => producto.cantidad < STOCK_MINIMO);
+    }
+
+    // Actualizar contador de bajo stock
+    function actualizarContadorBajoStock() {
+      const bajoStock = obtenerBajoStock();
+      const counter = document.getElementById('bajoStockCounter');
+      
+      if (bajoStock.length > 0) {
+        counter.textContent = bajoStock.length;
+        counter.className = 'badge badge-danger';
+      } else {
+        counter.textContent = '';
+        counter.className = 'badge';
+      }
+    }
+
+    // Agregar producto
+    function agregarProducto() {
+      const nombre = document.getElementById('nombre').value.trim();
+      const fecha = document.getElementById('fecha').value;
+      const cantidad = document.getElementById('cantidad').value;
+
+      if (!nombre || !fecha || !cantidad) {
+        mostrarAlerta('Por favor, completa todos los campos', 'error');
+        return;
+      }
+
+      // Validar que el producto no exista
+      if (productoExiste(nombre)) {
+        mostrarAlerta('Error: Ya existe un producto con ese nombre exacto. Use un nombre diferente o modifique el existente.', 'error');
+        return;
+      }
+
+      // Agregar producto al array
+      productos.push({
+        id: Date.now(), // ID único basado en timestamp
+        nombre: nombre,
+        fecha: fecha,
+        cantidad: cantidad
+      });
+
+      // Limpiar inputs
+      document.getElementById('formAgregarProducto').reset();
+      
+      // Mostrar alerta de éxito
+      mostrarAlerta('Producto agregado correctamente', 'success');
+      
+      // Actualizar selector de productos en movimiento
+      actualizarSelectorProductos();
+      
+      // Mostrar automáticamente el inventario
+      mostrarSeccion('verInventario');
+    }
+
+    // Actualizar selector de productos
+    function actualizarSelectorProductos() {
+      const selector = document.getElementById('producto_id');
+      
+      selector.innerHTML = '';
+      
+      if (productos.length === 0) {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'No hay productos disponibles';
+        selector.appendChild(option);
+        return;
+      }
+      
+      productos.forEach(producto => {
+        const option = document.createElement('option');
+        option.value = producto.id;
+        option.textContent = producto.nombre;
+        selector.appendChild(option);
+      });
+    }
+
+    // Registrar movimiento
+    function registrarMovimiento() {
+      const productoId = parseInt(document.getElementById('producto_id').value);
+      const tipo = document.getElementById('tipo').value;
+      const cantidad = parseInt(document.getElementById('cantidad_mov').value);
+
+      if (!productoId || !cantidad) {
+        mostrarAlerta('Por favor, completa todos los campos', 'error');
+        return;
+      }
+
+      // Encontrar el producto
+      const productoIndex = productos.findIndex(p => p.id === productoId);
+      
+      if (productoIndex === -1) {
+        mostrarAlerta('Producto no encontrado', 'error');
+        return;
+      }
+
+      // Actualizar cantidad según el tipo de movimiento
+      if (tipo === 'entrada') {
+        productos[productoIndex].cantidad = parseInt(productos[productoIndex].cantidad) + cantidad;
+        mostrarAlerta(`Entrada registrada: +${cantidad} unidades de ${productos[productoIndex].nombre}`, 'success');
+      } else {
+        if (productos[productoIndex].cantidad < cantidad) {
+          mostrarAlerta('No hay suficiente stock para esta salida', 'error');
+          return;
+        }
+        productos[productoIndex].cantidad = parseInt(productos[productoIndex].cantidad) - cantidad;
+        mostrarAlerta(`Salida registrada: -${cantidad} unidades de ${productos[productoIndex].nombre}`, 'warning');
+      }
+      
+      // Limpiar formulario
+      document.getElementById('cantidad_mov').value = '';
+      
+      // Actualizar la vista de inventario
+      cargarInventario();
+    }
+
+    // Eliminar producto
+    function eliminarProducto(id) {
+      if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+        productos = productos.filter(producto => producto.id !== id);
+        cargarInventario();
+        actualizarSelectorProductos();
+        mostrarAlerta('Producto eliminado correctamente', 'success');
+      }
+    }
+
+    // Cargar inventario
+    function cargarInventario() {
+      const tbody = document.getElementById('lista_productos');
+      const bajoStockBody = document.getElementById('lista_bajo_stock');
+      
+      tbody.innerHTML = '';
+      bajoStockBody.innerHTML = '';
+      
+      if (productos.length === 0) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td colspan="5" style="text-align: center;">No hay productos registrados</td>';
+        tbody.appendChild(tr);
+        
+        bajoStockBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No hay productos con bajo stock</td></tr>';
+        return;
+      }
+      
+      // Contador para productos con bajo stock
+      let bajoStockCount = 0;
+      
+      productos.forEach(producto => {
+        const cantidad = parseInt(producto.cantidad);
+        const tr = document.createElement('tr');
+        
+        // Determinar clase CSS según el nivel de stock
+        if (cantidad < STOCK_MINIMO / 2) {
+          tr.className = 'critical-stock';
+        } else if (cantidad < STOCK_MINIMO) {
+          tr.className = 'low-stock';
+        }
+        
+        // Determinar etiqueta de estado
+        let estado = '';
+        if (cantidad < STOCK_MINIMO / 2) {
+          estado = '<span class="badge badge-danger">CRÍTICO</span>';
+          bajoStockCount++;
+        } else if (cantidad < STOCK_MINIMO) {
+          estado = '<span class="badge badge-warning">BAJO</span>';
+          bajoStockCount++;
+        } else {
+          estado = '<span>OK</span>';
+        }
+        
+        tr.innerHTML = `
+          <td>${producto.nombre}</td>
+          <td>${producto.cantidad}</td>
+          <td>${producto.fecha}</td>
+          <td>${estado}</td>
+          <td>
+            <button class="btn btn-danger" onclick="eliminarProducto(${producto.id})">
+              Eliminar
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+        
+        // Agregar a la tabla de bajo stock si corresponde
+        if (cantidad < STOCK_MINIMO) {
+          const recomendacion = 'Ocupa Reabastecimiento';
+            
+          const trBajoStock = document.createElement('tr');
+          trBajoStock.innerHTML = `
+            <td>${producto.nombre}</td>
+            <td>${producto.cantidad}</td>
+            <td>${producto.fecha}</td>
+            <td>${recomendacion}</td>
+            <td>
+              <button class="btn btn-primary" onclick="document.getElementById('producto_id').value='${producto.id}'; mostrarSeccion('registrarMovimiento')">
+                Registrar Entrada
+              </button>
+            </td>
+          `;
+          bajoStockBody.appendChild(trBajoStock);
+        }
+      });
+      
+      // Si no hay productos con bajo stock
+      if (bajoStockCount === 0) {
+        bajoStockBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No hay productos con bajo stock</td></tr>';
+      }
+      
+      // Actualizar contador de bajo stock
+      actualizarContadorBajoStock();
+    }
+
+    // Inicializar selector de productos
+    actualizarSelectorProductos();
+  </script>
+</body>
+</html>
