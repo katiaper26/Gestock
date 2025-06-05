@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session, jsonify, m
 from db_config import get_connection
 from datetime import datetime
 import hashlib
+import os
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', '0f3c8a9e92b244f4a3bfb2cf3fa5c8b1a27e6b15b42f6e3c2e3a4fa14db2e103')
