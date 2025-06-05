@@ -4,7 +4,7 @@ from datetime import datetime
 import hashlib
 
 app = Flask(__name__)
-app.secret_key = '0f3c8a9e92b244f4a3bfb2cf3fa5c8b1a27e6b15b42f6e3c2e3a4fa14db2e103'
+app.secret_key = os.environ.get('SECRET_KEY', '0f3c8a9e92b244f4a3bfb2cf3fa5c8b1a27e6b15b42f6e3c2e3a4fa14db2e103')
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
